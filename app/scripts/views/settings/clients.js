@@ -80,23 +80,23 @@ define(function (require, exports, module) {
             this._setLastAccessTimeFormatted(
               item,
               t('%(translatedTimeAgo)s'),
-              t('over %(translatedTimeAgo)s')
+              t('Over %(translatedTimeAgo)s')
             );
           }
 
           if (item.isDevice) {
             this._setLastAccessTimeFormatted(
               item,
-              t('last sync %(translatedTimeAgo)s'),
-              t('last sync over %(translatedTimeAgo)s')
+              t('Last sync %(translatedTimeAgo)s'),
+              t('Last sync over %(translatedTimeAgo)s')
             );
           }
 
           if (item.clientType === Constants.CLIENT_TYPE_OAUTH_APP) {
             this._setLastAccessTimeFormatted(
               item,
-              t('last active %(translatedTimeAgo)s'),
-              t('last active over %(translatedTimeAgo)s')
+              t('Last active %(translatedTimeAgo)s'),
+              t('Last active over %(translatedTimeAgo)s')
             );
           }
         } else {
