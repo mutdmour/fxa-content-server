@@ -244,7 +244,12 @@ define([], function () {
     SMS_WHY_IS_THIS_REQUIRED: {
       CLOSE: '.connect-another-device button[type="submit"]',
       HEADER: '#fxa-why-connect-another-device-header',
-    }
+    },
+    UNLOCK: {
+      REFRESH_BUTTON: '.refresh-verification-state',
+      SEND_BUTTON: '.send-verification-email',
+      UNLOCK_BUTTON: '.unlock-button',
+    },
   };
   /*eslint-enable max-len*/
 });

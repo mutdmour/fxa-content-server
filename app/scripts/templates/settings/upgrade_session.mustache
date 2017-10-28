@@ -4,7 +4,7 @@
             <h2 class="settings-unit-title">{{ title }}</h2>
         </header>
         <button class="settings-button primary settings-unit-toggle" data-href="{{ gatedHref}}">
-            <span class="add-button">{{#t}}Unlock…{{/t}}</span>
+            <span class="unlock-button">{{#t}}Unlock…{{/t}}</span>
         </button>
     </div>
 
@@ -12,9 +12,7 @@
         <div class="error"></div>
 
         <form novalidate>
-            <p>
-                {{ caption }}
-            </p>
+            <p> {{ caption }} </p>
             <ul class="email-list button-row">
                 <li class="email-address">
                     <div class="address">{{ email }}</div>

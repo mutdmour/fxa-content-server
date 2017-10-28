@@ -60,6 +60,59 @@ define([
       return this.remote.then(clearBrowserState());
     },
 
+    'gated in unverified session open verification same tab': function () {
+      return this.remote
+        // when an account is created, the original session is verified
+        // re-login to destroy original session and created an unverified one
+        .then(openPage(SIGNUP_URL, selectors.SIGNUP.HEADER))
+        .then(fillOutSignUp(email, PASSWORD))
+        .then(testElementExists(selectors.CONFIRM_SIGNUP.HEADER))
+        .then(openVerificationLinkInSameTab(email, 0))
+        .then(testElementExists(selectors.SETTINGS.HEADER))
+        .then(click(selectors.SETTINGS.SIGNOUT))
+        .then(testElementExists(selectors.SIGNIN.HEADER))
+        .then(fillOutSignIn(email, PASSWORD))
+        .then(testElementExists(selectors.SETTINGS.HEADER))
+
+        // unlock panel
+        .then(click(selectors.UNLOCK.UNLOCK_BUTTON))
+        .then(testElementExists(selectors.UNLOCK.REFRESH_BUTTON))
+
+        // send and open verification in same tab
+        .then(click(selectors.UNLOCK.SEND_BUTTON))
+        .then(openVerificationLinkInSameTab(email, 1))
+
+        // panel becomes verified and opens add secondary panel
+        .then(testElementExists(selectors.EMAIL.INPUT));
+    },
+
+    'gated in unverified session open verification new window': function () {
+      return this.remote
+      // when an account is created, the original session is verified
+      // re-login to destroy original session and created an unverified one
+        .then(openPage(SIGNUP_URL, selectors.SIGNUP.HEADER))
+        .then(fillOutSignUp(email, PASSWORD))
+        .then(testElementExists(selectors.CONFIRM_SIGNUP.HEADER))
+        .then(openVerificationLinkInSameTab(email, 0))
+        .then(testElementExists(selectors.SETTINGS.HEADER))
+        .then(click(selectors.SETTINGS.SIGNOUT))
+        .then(testElementExists(selectors.SIGNIN.HEADER))
+        .then(fillOutSignIn(email, PASSWORD))
+        .then(testElementExists(selectors.SETTINGS.HEADER))
+
+        // unlock panel
+        .then(click(selectors.UNLOCK.UNLOCK_BUTTON))
+        .then(testElementExists(selectors.UNLOCK.REFRESH_BUTTON))
+
+        // send and open verification in same tab
+        .then(click(selectors.UNLOCK.SEND_BUTTON))
+        .then(openVerificationLinkInDifferentBrowser(email, 1))
+
+        // panel becomes verified after refreshing
+        .then(click(selectors.UNLOCK.REFRESH_BUTTON))
+        .then(testElementExists(selectors.EMAIL.INPUT));
+    },
+
     'add and verify secondary email': function () {
       return this.remote
         // sign up via the UI, we need a verified session to use secondary email
@@ -203,7 +256,6 @@ define([
 
         .then(testElementExists(selectors.SETTINGS.HEADER));
     },
-
 
     'signin confirmation is sent to secondary emails': function () {
       const PAGE_SIGNIN_DESKTOP = `${SIGNIN_URL}?context=fx_desktop_v3&service=sync&forceAboutAccounts=true`;

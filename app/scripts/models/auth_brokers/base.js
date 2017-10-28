@@ -21,6 +21,7 @@ define(function (require, exports, module) {
   const SameBrowserVerificationModel = require('../verification/same-browser');
   const SearchParamMixin = require('../mixins/search-param');
   const SettingsIfSignedInBehavior = require('../../views/behaviors/settings');
+  const t = (msg) => msg;
   const Vat = require('../../lib/vat');
 
   const QUERY_PARAMETER_SCHEMA = {
@@ -64,8 +65,14 @@ define(function (require, exports, module) {
      */
     defaultBehaviors: {
       afterChangePassword: new NullBehavior(),
+      afterCompletePrimaryEmail: new SettingsIfSignedInBehavior(new NavigateBehavior('primary_email_verified'), {
+        endpoint: 'settings/emails',
+        success: t('Primary email verified successfully')
+      }),
       afterCompleteResetPassword: new NullBehavior(),
-      afterCompleteSecondaryEmail: new SettingsIfSignedInBehavior(new NavigateBehavior('secondary_email_verified')),
+      afterCompleteSecondaryEmail: new SettingsIfSignedInBehavior(new NavigateBehavior('secondary_email_verified'), {
+        success: t('Secondary email verified successfully')
+      }),
       afterCompleteSignIn: new NavigateBehavior('signin_verified'),
       afterCompleteSignUp: new NavigateBehavior('signup_verified'),
       afterDeleteAccount: new NullBehavior(),
@@ -229,6 +236,17 @@ define(function (require, exports, module) {
     afterCompleteSignIn (account) {
       return this.unpersistVerificationData(account)
         .then(() => this.getBehavior('afterCompleteSignIn'));
+    },
+
+    /**
+     * Called after primary email verification, in the verification tab.
+     *
+     * @param {Object} account
+     * @return {Promise}
+     */
+    afterCompletePrimaryEmail (account) {
+      return this.unpersistVerificationData(account)
+        .then(() => this.getBehavior('afterCompletePrimaryEmail'));
     },
 
     /**

@@ -37,7 +37,7 @@ define(function (require, exports, module) {
       return this.setupSessionGateIfRequired()
         .then((verified) => {
           if (verified) {
-            this.displaySuccess(t('Primary email verified'), {
+            this.displaySuccess(t('Primary email verified successfully'), {
               closePanel: false
             });
           }
@@ -47,8 +47,7 @@ define(function (require, exports, module) {
 
     _clickSendVerificationEmail () {
       const account = this.getSignedInAccount();
-      // TODO: Replace this with custom resend code function
-      return account.retrySignUp(this.relier)
+      return account.requestVerifySession(this.relier)
         .then(() => {
           this.displaySuccess(t('Verification email sent'), {
             closePanel: false
@@ -56,25 +55,16 @@ define(function (require, exports, module) {
         });
     },
 
-    beforeRender() {
-      return this.setupSessionGateIfRequired()
-        .then((isEnabled) => {
-          if (isEnabled) {
-            return this._fetchEmails();
-          }
-        });
-    },
-
     setupSessionGateIfRequired () {
       const account = this.getSignedInAccount();
-      return account.recoveryEmailSecondaryEmailEnabled()
-        .then((isEnabled) => {
-          if (! isEnabled) {
+      return account.sessionVerificationStatus()
+        .then((result) => {
+          if (! result.sessionVerified) {
             this.template = UpgradeSessionTemplate;
           } else {
             this.template = this.gatedTemplate;
           }
-          return isEnabled;
+          return result.sessionVerified;
         });
     }
   };

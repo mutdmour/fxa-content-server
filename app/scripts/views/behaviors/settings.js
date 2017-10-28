@@ -13,14 +13,21 @@ define(function (require, exports, module) {
   const NavigateBehavior = require('../behaviors/navigate');
 
   const t = (msg) => msg;
-  const success = t('Account verified successfully');
+  let success = t('Account verified successfully');
+  let endpoint = 'settings';
 
-  module.exports = function (defaultBehavior) {
+  module.exports = function (defaultBehavior, options = {}) {
     const behavior = function (view, account) {
       return account.isSignedIn()
         .then((isSignedIn) => {
           if (isSignedIn) {
-            return new NavigateBehavior('settings', { success });
+            if (options.success) {
+              success = options.success;
+            }
+            if (options.endpoint) {
+              endpoint = options.endpoint;
+            }
+            return new NavigateBehavior(endpoint, {success});
           }
 
           return defaultBehavior;

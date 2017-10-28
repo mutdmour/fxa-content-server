@@ -39,6 +39,15 @@ define(function (require, exports, module) {
       'click .set-primary': preventDefaultThen('setPrimary')
     },
 
+    beforeRender () {
+      return this.setupSessionGateIfRequired()
+        .then((isEnabled) => {
+          if (isEnabled) {
+            return this._fetchEmails();
+          }
+        });
+    },
+
     initialize (options = {}) {
       if (options.emails) {
         this._emails = options.emails;
@@ -159,11 +168,11 @@ define(function (require, exports, module) {
 
   Cocktail.mixin(
     View,
+    UpgradeSessionMixin,
     AvatarMixin,
     SettingsPanelMixin,
     FloatingPlaceholderMixin,
-    SearchParamMixin,
-    UpgradeSessionMixin
+    SearchParamMixin
   );
 
   module.exports = View;
